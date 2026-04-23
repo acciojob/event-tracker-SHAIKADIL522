@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import BigCalendar from "react-big-calendar";
 import moment from "moment";
 import Popup from "react-popup";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./../styles/App.css";
 
-const localizer = momentLocalizer(moment);
+BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 const PAST_COLOR = "rgb(222, 105, 135)";
 const UPCOMING_COLOR = "rgb(140, 189, 76)";
@@ -34,52 +34,6 @@ const App = () => {
         color: "#fff",
       },
     };
-  };
-
-  const openCreatePopup = (slotInfo) => {
-    let title = "";
-    let location = "";
-
-    Popup.create({
-      title: "Create Event",
-      content: (
-        <div>
-          <input
-            placeholder="Event Title"
-            onChange={(e) => { title = e.target.value; }}
-            style={{ display: "block", width: "100%", marginBottom: 8 }}
-          />
-          <input
-            placeholder="Event Location"
-            onChange={(e) => { location = e.target.value; }}
-            style={{ display: "block", width: "100%" }}
-          />
-        </div>
-      ),
-      buttons: {
-        right: [
-          {
-            text: "Save",
-            className: "mm-popup__btn",
-            action: () => {
-              if (title.trim()) {
-                setEvents((prev) => [
-                  ...prev,
-                  {
-                    id: Date.now(),
-                    title,
-                    location,
-                    start: slotInfo.start,
-                    end: slotInfo.end || slotInfo.start,
-                  },
-                ]);
-              }
-              Popup.close();
-            },
-          },
-        ],
-      },
-    });
   };
 
   const openEditPopup = (event) => {
@@ -154,6 +108,52 @@ const App = () => {
     });
   };
 
+  const openCreatePopup = (slotInfo) => {
+    let title = "";
+    let location = "";
+
+    Popup.create({
+      title: "Create Event",
+      content: (
+        <div>
+          <input
+            placeholder="Event Title"
+            onChange={(e) => { title = e.target.value; }}
+            style={{ display: "block", width: "100%", marginBottom: 8 }}
+          />
+          <input
+            placeholder="Event Location"
+            onChange={(e) => { location = e.target.value; }}
+            style={{ display: "block", width: "100%" }}
+          />
+        </div>
+      ),
+      buttons: {
+        right: [
+          {
+            text: "Save",
+            className: "mm-popup__btn",
+            action: () => {
+              if (title.trim()) {
+                setEvents((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    title,
+                    location,
+                    start: slotInfo.start,
+                    end: slotInfo.end || slotInfo.start,
+                  },
+                ]);
+              }
+              Popup.close();
+            },
+          },
+        ],
+      },
+    });
+  };
+
   return (
     <div>
       <Popup />
@@ -162,8 +162,7 @@ const App = () => {
         <button className="btn" onClick={() => setFilter("past")}>Past</button>
         <button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button>
       </div>
-      <Calendar
-        localizer={localizer}
+      <BigCalendar
         events={filteredEvents}
         startAccessor="start"
         endAccessor="end"

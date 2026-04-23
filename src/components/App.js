@@ -5,7 +5,7 @@ import Popup from "react-popup";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./../styles/App.css";
 
-BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
+const localizer = BigCalendar.momentLocalizer(moment);
 
 const PAST_COLOR = "rgb(222, 105, 135)";
 const UPCOMING_COLOR = "rgb(140, 189, 76)";
@@ -39,7 +39,6 @@ const App = () => {
   const openEditPopup = (event) => {
     let newTitle = event.title;
     let newLocation = event.location;
-
     Popup.create({
       title: "Edit Event",
       content: (
@@ -111,7 +110,6 @@ const App = () => {
   const openCreatePopup = (slotInfo) => {
     let title = "";
     let location = "";
-
     Popup.create({
       title: "Create Event",
       content: (
@@ -163,6 +161,7 @@ const App = () => {
         <button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button>
       </div>
       <BigCalendar
+        localizer={localizer}
         events={filteredEvents}
         startAccessor="start"
         endAccessor="end"

@@ -13,6 +13,7 @@ const UPCOMING_COLOR = "rgb(140, 189, 76)";
 const App = () => {
   const [events, setEvents] = useState([]);
   const [filter, setFilter] = useState("all");
+  const [selectedSlot, setSelectedSlot] = useState(null);
 
   const now = new Date();
 
@@ -34,6 +35,53 @@ const App = () => {
         color: "#fff",
       },
     };
+  };
+
+  const openCreatePopup = (slot) => {
+    let title = "";
+    let location = "";
+    const slotToUse = slot || selectedSlot || { start: new Date(), end: new Date() };
+
+    Popup.create({
+      title: "Create Event",
+      content: (
+        <div>
+          <input
+            placeholder="Event Title"
+            onChange={(e) => { title = e.target.value; }}
+            style={{ display: "block", width: "100%", marginBottom: 8 }}
+          />
+          <input
+            placeholder="Event Location"
+            onChange={(e) => { location = e.target.value; }}
+            style={{ display: "block", width: "100%" }}
+          />
+        </div>
+      ),
+      buttons: {
+        right: [
+          {
+            text: "Save",
+            className: "mm-popup__btn",
+            action: () => {
+              if (title.trim()) {
+                setEvents((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    title,
+                    location,
+                    start: slotToUse.start,
+                    end: slotToUse.end || slotToUse.start,
+                  },
+                ]);
+              }
+              Popup.close();
+            },
+          },
+        ],
+      },
+    });
   };
 
   const openEditPopup = (event) => {
@@ -107,58 +155,19 @@ const App = () => {
     });
   };
 
-  const openCreatePopup = (slotInfo) => {
-    let title = "";
-    let location = "";
-    Popup.create({
-      title: "Create Event",
-      content: (
-        <div>
-          <input
-            placeholder="Event Title"
-            onChange={(e) => { title = e.target.value; }}
-            style={{ display: "block", width: "100%", marginBottom: 8 }}
-          />
-          <input
-            placeholder="Event Location"
-            onChange={(e) => { location = e.target.value; }}
-            style={{ display: "block", width: "100%" }}
-          />
-        </div>
-      ),
-      buttons: {
-        right: [
-          {
-            text: "Save",
-            className: "mm-popup__btn",
-            action: () => {
-              if (title.trim()) {
-                setEvents((prev) => [
-                  ...prev,
-                  {
-                    id: Date.now(),
-                    title,
-                    location,
-                    start: slotInfo.start,
-                    end: slotInfo.end || slotInfo.start,
-                  },
-                ]);
-              }
-              Popup.close();
-            },
-          },
-        ],
-      },
-    });
+  const handleSelectSlot = (slotInfo) => {
+    setSelectedSlot(slotInfo);
+    openCreatePopup(slotInfo);
   };
 
   return (
     <div>
       <Popup />
       <div style={{ marginBottom: 16 }}>
-        <button className="btn" onClick={() => setFilter("all")}>All</button>
-        <button className="btn" onClick={() => setFilter("past")}>Past</button>
-        <button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button>
+        <div><button className="btn" onClick={() => openCreatePopup(null)}>Add Event</button></div>
+        <div><button className="btn" onClick={() => setFilter("all")}>All</button></div>
+        <div><button className="btn" onClick={() => setFilter("past")}>Past</button></div>
+        <div><button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button></div>
       </div>
       <BigCalendar
         localizer={localizer}
@@ -167,7 +176,7 @@ const App = () => {
         endAccessor="end"
         style={{ height: 600 }}
         selectable
-        onSelectSlot={openCreatePopup}
+        onSelectSlot={handleSelectSlot}
         onSelectEvent={openEditDeletePopup}
         eventPropGetter={eventStyleGetter}
       />

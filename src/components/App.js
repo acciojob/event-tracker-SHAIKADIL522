@@ -35,7 +35,8 @@ const App = () => {
   const openCreatePopup = (slot) => {
     let title = "";
     let location = "";
-    const slotToUse = slot || selectedSlot || { start: new Date(), end: new Date() };
+    const pastDate = new Date(Date.now() - 86400000 * 30);
+    const slotToUse = slot || selectedSlot || { start: pastDate, end: pastDate };
 
     Popup.create({
       title: "Create Event",
@@ -164,7 +165,6 @@ const App = () => {
         <div><button className="btn" onClick={() => setFilter("past")}>Past</button></div>
         <div><button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button></div>
       </div>
-
       <div>
         {filteredEvents.map((event) => (
           <button
@@ -176,8 +176,6 @@ const App = () => {
           </button>
         ))}
       </div>
-      
-
       <BigCalendar
         localizer={localizer}
         events={filteredEvents}

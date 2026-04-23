@@ -28,12 +28,7 @@ const App = () => {
   const eventStyleGetter = (event) => {
     const backgroundColor = isPast(event) ? PAST_COLOR : UPCOMING_COLOR;
     return {
-      style: {
-        backgroundColor,
-        borderRadius: "4px",
-        border: "none",
-        color: "#fff",
-      },
+      style: { backgroundColor, border: "none", color: "#fff" },
     };
   };
 
@@ -170,21 +165,11 @@ const App = () => {
         <div><button className="btn" onClick={() => setFilter("upcoming")}>Upcoming</button></div>
       </div>
 
-      {/* Event list as buttons — required by Cypress tests */}
       <div>
         {filteredEvents.map((event) => (
           <button
             key={event.id}
-            style={{
-              backgroundColor: isPast(event) ? PAST_COLOR : UPCOMING_COLOR,
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              padding: "6px 12px",
-              margin: "4px",
-              cursor: "pointer",
-              display: "block",
-            }}
+            style={{ backgroundColor: isPast(event) ? PAST_COLOR : UPCOMING_COLOR }}
             onClick={() => openEditDeletePopup(event)}
           >
             {event.title}

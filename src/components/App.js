@@ -176,6 +176,7 @@ const App = () => {
           </button>
         ))}
       </div>
+      
 
       <BigCalendar
         localizer={localizer}

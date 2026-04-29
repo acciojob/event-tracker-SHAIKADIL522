@@ -3,12 +3,11 @@ import BigCalendar from "react-big-calendar";
 import moment from "moment";
 import Popup from "react-popup";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-popup/style.css";
 import "./../styles/App.css";
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
-const PAST_COLOR = "rgb(222, 105, 135)";
+const PAST_COLOR   = "rgb(222, 105, 135)";
 const UPCOMING_COLOR = "rgb(140, 189, 76)";
 
 const App = () => {
@@ -32,6 +31,7 @@ const App = () => {
     },
   });
 
+  // ── Create ────────────────────────────────────────────────────────────────
   const openCreatePopup = (slot) => {
     const pastDate  = new Date(Date.now() - 86400000 * 30);
     const slotToUse = slot || { start: pastDate, end: pastDate };
@@ -73,6 +73,7 @@ const App = () => {
     });
   };
 
+  // ── Edit ──────────────────────────────────────────────────────────────────
   const openEditPopup = (event) => {
     const formData = { title: event.title, location: event.location || "" };
 
@@ -112,6 +113,7 @@ const App = () => {
     });
   };
 
+  // ── View / Edit / Delete ──────────────────────────────────────────────────
   const openEditDeletePopup = (event) => {
     Popup.create({
       title: event.title,
@@ -130,7 +132,7 @@ const App = () => {
           className: "mm-popup__btn--info",
           action: () => {
             Popup.close();
-            setTimeout(() => openEditPopup(event), 0);
+            setTimeout(() => openEditPopup(event), 50);
           },
         }],
       },
@@ -139,8 +141,6 @@ const App = () => {
 
   return (
     <div>
-      <Popup />
-
       <div style={{ marginBottom: 16 }}>
         <button className="btn" onClick={() => openCreatePopup(null)}>Add Event</button>
         <button className="btn" onClick={() => setFilter("all")}>All</button>
